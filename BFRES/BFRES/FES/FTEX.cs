@@ -92,8 +92,8 @@ namespace BFRES
                     tex.type = PixelInternalFormat.Rgba;
                     tex.utype = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
-                default:
-                    throw new Exception("Unknown format");
+                //default:
+                    //throw new Exception("Unknown format");
             }
 
             tex.load();

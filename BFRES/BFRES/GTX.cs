@@ -388,16 +388,20 @@ namespace BFRES
                 case GX2SurfaceFormat.GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM:
                     return 0x20;
                 case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_UNORM:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_SRGB:
                     return 0x40;
                 case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC2_UNORM:
                     return 0x80;
                 case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_UNORM:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_SRGB:
                     return 0x80;
                 case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_UNORM:
                     return 0x40;
                 case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_UNORM:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_SNORM:
                     return 0x80;
             }
+            Console.WriteLine("UnkFormat:" + (GX2SurfaceFormat)i);
             return -1;
         }
 
@@ -420,7 +424,8 @@ namespace BFRES
                 height /= 4;
 
                 if ((GX2SurfaceFormat)surface.format == GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_UNORM ||
-                    (GX2SurfaceFormat)surface.format == GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_UNORM)
+                    (GX2SurfaceFormat)surface.format == GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_UNORM ||
+                    (GX2SurfaceFormat)surface.format == GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_SRGB)
                 {
                     blockSize = 8;
                 }
@@ -477,7 +482,7 @@ namespace BFRES
             return (unk2 << 3) | (0xFF & unk1) | (pipe << 8) | (bank << 9);
         }
 
-        public static int computePixelIndexWithinMicroTile(int x, int y, int bpp)
+        public static int computePixelIndexWithinMicroTile(int x, int y, int bpp, int z = 0)
         {
             int bits = ((x & 4) << 1) | ((y & 2) << 3) | ((y & 4) << 3);
 
@@ -492,6 +497,10 @@ namespace BFRES
             else if (bpp == 0x80)
             {
                 bits |= (y & 1) | ((x & 1) << 1) | ((x & 2) << 1);
+            }
+            else
+            {
+                Console.WriteLine("Unk BPP:0x{0:X}", (uint)bpp);
             }
 
             return bits;

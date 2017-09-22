@@ -332,6 +332,7 @@ namespace BFRES
         {
             public float x = 0, y = 0, z = 0;
             public float nx = 0, ny = 0, nz = 0;
+            public float r = 1, g = 1, b = 1, a = 1;
             public Vector2 uv0 = new Vector2();
             public float i1 = 0, i2 = 0, i3 = 0, i4 = 0; // can have 5
             public float w1 = 0, w2 = 0, w3 = 0, w4 = 0;
@@ -357,11 +358,19 @@ namespace BFRES
                         case 0x80D: data.Add(d.readFloat()); break;
                         case 0x813: data.Add(d.readFloat()); break;*/
                         case 0x004:
-                            vert.w1 = d.readByte() / (float)255;
-                            vert.w2 = d.readByte() / (float)255;
+                            if (att.Text.Equals("_u0"))
+                            {
+                                vert.uv0.X = d.readByte() / (float)255;
+                                vert.uv0.Y = d.readByte() / (float)255;
+                            }
+                            else
+                            {
+                                vert.w1 = d.readByte() / (float)255;
+                                vert.w2 = d.readByte() / (float)255;
+                            }
                             break;
                         case 0x007:
-                            if (att.Text.Equals("_u2"))
+                            if (att.Text.Equals("_u0"))
                             {
                                 vert.uv0.X = d.readShort() / (float)0xFFFF;
                                 vert.uv0.Y = d.readShort() / (float)0xFFFF;
@@ -396,6 +405,14 @@ namespace BFRES
                             vert.nx = FileData.sign10Bit((normVal) & 0x3FF) / 511f;
                             vert.ny = FileData.sign10Bit((normVal >> 10) & 0x3FF) / 511f;
                             vert.nz = FileData.sign10Bit((normVal >> 20) & 0x3FF) / 511f;
+                            break;
+                        case 0x808:
+                            vert.uv0.X = d.readHalfFloat();
+                            vert.uv0.Y = d.readHalfFloat();
+                            break;
+                        case 0x80D:
+                            vert.uv0.X = d.readFloat();
+                            vert.uv0.Y = d.readFloat();
                             break;
                         case 0x80F:
                             vert.x = d.readHalfFloat();

@@ -186,15 +186,20 @@ namespace BFRES
             v = Matrix4.CreateRotationY(0.5f * rot) * Matrix4.CreateRotationX(0.2f * lookup) * Matrix4.CreateTranslation(5 * width, -5f - 5f * height, zoom) * Matrix4.CreatePerspectiveFieldOfView(1.3f, glControl1.Width / (float)glControl1.Height, 1.0f, 1000.0f);
 
             GL.MatrixMode(MatrixMode.Projection);
+            
             GL.LoadMatrix(ref v);
+            
             GL.MatrixMode(MatrixMode.Modelview);
 
             GL.Disable(EnableCap.Texture2D);
+
             DrawFloor();
             GL.Enable(EnableCap.Texture2D);
-
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
             foreach (RenderableNode node in RenderableNodes)
             {
+                
                 node.Render(v);
             }
 
@@ -233,7 +238,7 @@ namespace BFRES
 
         private void glControl1_Load(object sender, EventArgs e)
         {
-            defTex = loadImage(new Bitmap("C:\\Users\\ploaj_000\\Desktop\\proguard5.2.1\\CharacterThingy\\default.png"));
+            defTex = loadImage(new Bitmap("C:\\Default.png"));
         }
 
         private void treeView1_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
@@ -269,9 +274,13 @@ namespace BFRES
         private void glControl1_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
             if (e.KeyChar == 's')
-                zoom -= 5;
+                zoom -= 1;
             if (e.KeyChar == 'w')
-                zoom += 5;
+                zoom += 1;
+            if (e.KeyChar == 'e')
+                height += 0.1f;
+            if (e.KeyChar == 'q')
+                height -= 0.1f;
             glControl1.Invalidate();
         }
     }
